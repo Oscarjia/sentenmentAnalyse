@@ -1,6 +1,6 @@
-#### 对数据集进行一些处理。
-##### 1、数据分布初步分析
-可以看出数据集的分布式不均衡的。
+### 对数据集进行一些处理。
+#### 1、数据分布初步分析
+##### 可以看出数据集的分布式不均衡的。
 ```python
 traindf=pd.read_csv('data/train/train.csv')
 columns=traindf.columns.values.tolist()
