@@ -1,5 +1,5 @@
 #### 对数据集进行一些处理。
-##### 1、数据分布分析
+##### 1、数据分布初步分析
 可以看出数据集的分布式不均衡的。
 ```python
 traindf=pd.read_csv('data/train/train.csv')
@@ -27,8 +27,8 @@ location_easy_to_find
  0     2472
  
 ```
-##### 2、提q有效数据
-#只提取中文和字母数字
+##### 2、提取有效数据
+###### 只提取中文、字母、数字
 ```python
 import re
 cop = re.compile("[^\u4e00-\u9fa5^a-z^A-Z^0-9]")
