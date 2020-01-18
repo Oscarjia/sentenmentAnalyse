@@ -37,8 +37,8 @@ ys_validdicts=getonehotlabels(validdf)
 ```
 ##### 2、训练模型
 ###### 实验不同的参数，判断模型的效果。发现当batch_size比较大为1000的时候，f1-score的效果比较差，取值100的时候比较好。这也说明数据集数据分布很不均衡。
-###### 针对这种不均衡采取了一种 https://arxiv.org/pdf/1708.02002.pdf 的方法，增加了判定错误之后的惩罚ib_weight。感觉上这样做没有什么作用。
-[ib_wight=tf.multiply(Y, tf.pow(tf.subtract(1., y_model), gamma))]
+###### 针对这种不均衡采取了一种 https://arxiv.org/pdf/1708.02002.pdf 的方法，增加了判定错误之后的惩罚ib_weight。感觉上这样做没有什么作用。[ib_wight=tf.multiply(Y, tf.pow(tf.subtract(1., y_model), gamma))]
+###### 另外把这些重要的参数用joblib.dump保留到文件里面，用于做预测。joblib.dump(paramdict, config.model_path+'/paramdict_3')
 
 ```python
 learning_rate = 0.01
