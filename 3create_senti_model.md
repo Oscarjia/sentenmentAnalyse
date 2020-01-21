@@ -45,25 +45,25 @@ learning_rate = 0.01
 training_epoch =1
 num_labels = 4
 batch_size = 100
-gamma=2
-alpha=4
+gamma=4.
+alpha=1.
 X = tf.placeholder("float", shape=(None, num_features))
 Y = tf.placeholder("float", shape=(None, num_labels))
 w = tf.Variable(tf.zeros([num_features, num_labels]))
 b = tf.Variable(tf.zeros([num_labels]))
 y_model = tf.nn.softmax(tf.matmul(X, w) + b)
-ce=tf.multiply(Y,-tf.log(y_model))
+#ce=tf.multiply(Y,tf.log(y_model))
 #for imbalanced data reason add ib_wight variable
-ib_wight=tf.multiply(Y, tf.pow(tf.subtract(1., y_model), gamma))
-cost = -tf.reduce_sum(tf.multiply(alpha,tf.multiply(ib_wight,ce)))
-train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
 model_true = tf.argmax(Y, 1)
 model_predict = tf.argmax(y_model, 1)
 correct_prediction = tf.equal(model_predict, model_true)
-accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+accuracy = tf.reduce_sum(tf.cast(correct_prediction, "float"))# for punishment
+cost = -tf.reduce_sum(Y*tf.log(y_model))+gamma*accuracy
+train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
 with tf.Session() as sess:
     tf.global_variables_initializer().run()
     f1list = []
+    #print(correct_prediction.eval())
     paramdict = dict()
     for column in config.columns[2:22]:
         print(column)
@@ -89,7 +89,7 @@ with tf.Session() as sess:
                                                        feed_dict={X: test_x1, Y: test_y1})
                 model_f1_score = f1_score(y_true, y_pred, average='macro')
                 model_f1_score_micro = f1_score(y_true, y_pred, average='micro')
-        print('train step is {},err is {},acc is {},f1score macro is {},micro is {}'.format(step, err, acc, model_f1_score,model_f1_score_micro))
+                print('train step is {},err is {},acc is {},f1score macro is {},micro is {}'.format(step, err, acc, model_f1_score,model_f1_score_micro))
         # valid set
         for step in range(training_epoch * valid_size // batch_size):
             offset = (step * batch_size) % train_size
@@ -117,5 +117,4 @@ with tf.Session() as sess:
         #                                                                                    model_f1_scorev_micro))
     print('final ly train f1 final macro score mean is {} '.format(np.mean(f1list)))
     joblib.dump(paramdict, config.model_path+'/paramdict_3')
-
 ```
