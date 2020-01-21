@@ -7,8 +7,7 @@
 ##### 数据来源是：AI Challenger 2018 细粒度情感分析赛道
 
 ##### 第二部分：cost function：用熵表示。
-##### ce=tf.multiply(Y,-tf.log(y_model))
-##### cost = -tf.reduce_sum(tf.multiply(ib_weight,ce)) #针对数据的不平衡，增加一个出错的惩罚权重。
+##### cost = -tf.reduce_sum(Y*tf.log(y_model))+gamma*accuracy #针对数据的不平衡，增加一个出错的惩罚权重。
 
 ##### 第三部分：优化方法：梯度下降方法。
 ##### train_op = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
